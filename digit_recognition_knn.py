@@ -14,7 +14,7 @@ with open(TEST_FILE) as tf:
 array_files, labels, file_names = [], [], []
 for root, dirs, files in os.walk(TRAINING_DIR):
     for filename in files:
-        label = str(filename).split("_")[1]
+        label = int(str(filename).split("_")[1])
         labels.append(label)
         file_names.append(filename)
         path = os.path.join(root, filename)
@@ -35,10 +35,18 @@ for array_file_idx, array_file in enumerate(array_files):
     dif_counters.append(dif_counter)
     dif_counter = 0
 
+
+# sort by nearest neighbours
+dif_counters, file_names, array_files, labels \
+    = (list(t) for t in zip(*sorted(zip(dif_counters, file_names, array_files, labels))))
+
+k = int(input("Please Insert the number of K between 1 to 11: "))
+nearest_labels = labels[:k]
+print(nearest_labels)
+
 nearest_file_idx = dif_counters.index(min(dif_counters))
-print("Min difference found: " + str(min(dif_counters)))
 print("Nearest file idx: " + str(nearest_file_idx))
 print("Nearest file: \"" + file_names[nearest_file_idx] + "\"")
 print(*array_files[nearest_file_idx], sep='\n')
-print("Classified as: " + labels[nearest_file_idx])
+print("Classified as: " + str(max(set(nearest_labels), key=nearest_labels.count)))
 
