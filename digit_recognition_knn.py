@@ -1,4 +1,6 @@
 import os
+import random
+import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_DIR = os.path.join(BASE_DIR, "dataset1")
@@ -19,6 +21,10 @@ for root, dirs, files in os.walk(TRAINING_DIR):
         with open(path) as file:
             array_files.append(file.read().splitlines())
 
+zipped = list(zip(file_names, array_files, labels))
+random.shuffle(zipped)
+file_names, array_files, labels = zip(*zipped)
+
 dif_counter = 0
 dif_counters = []
 for array_file_idx, array_file in enumerate(array_files):
@@ -31,7 +37,8 @@ for array_file_idx, array_file in enumerate(array_files):
 
 nearest_file_idx = dif_counters.index(min(dif_counters))
 print("Min difference found: " + str(min(dif_counters)))
-print("nearest file idx: " + str(nearest_file_idx))
-print("nearest file: \"" + files[nearest_file_idx] + "\"")
-print("classified as: " + labels[nearest_file_idx])
+print("Nearest file idx: " + str(nearest_file_idx))
+print("Nearest file: \"" + file_names[nearest_file_idx] + "\"")
+print(*array_files[nearest_file_idx], sep='\n')
+print("Classified as: " + labels[nearest_file_idx])
 
