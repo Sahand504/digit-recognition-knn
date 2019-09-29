@@ -1,6 +1,5 @@
 import os
 import random
-import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_DIR = os.path.join(BASE_DIR, "dataset1")
@@ -42,11 +41,10 @@ dif_counters, file_names, array_files, labels \
 
 k = int(input("Please Insert the number of K between 1 to 11: "))
 nearest_labels = labels[:k]
-print(nearest_labels)
-
+nearest_files = file_names[:k]
 nearest_file_idx = dif_counters.index(min(dif_counters))
-print("Nearest file idx: " + str(nearest_file_idx))
-print("Nearest file: \"" + file_names[nearest_file_idx] + "\"")
-print(*array_files[nearest_file_idx], sep='\n')
+print("Nearest Labels: " + str(nearest_labels))
+print("Nearest Files: " + str(nearest_files))
+# print(*array_files[nearest_file_idx], sep='\n')
 print("Classified as: " + str(max(set(nearest_labels), key=nearest_labels.count)))
 
