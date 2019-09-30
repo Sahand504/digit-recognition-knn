@@ -24,13 +24,21 @@ file_names = list(labels.keys())
 random.shuffle(file_names)
 n = len(file_names)
 
+precisions = []
 for i in range(K_FOLD):
-    test_file_names = file_names[int(n/K_FOLD*i):int(n/K_FOLD*(i+1))]
+    test_file_names = file_names[int(n / K_FOLD * i):int(n / K_FOLD * (i + 1))]
     train_file_names = [item for item in file_names if item not in test_file_names]
 
+    error_count = 0
+    test_number = len(test_file_names)
+
+    cnt = 0
     for test_file_name in test_file_names:
-        test_label = test_file_name.split("_")[1]
-        print(test_label + " <------------------------- Real Label ------------------------> " + test_label)
+        print("COUNT: " + str(cnt))
+        cnt += 1
+
+        test_label = int(test_file_name.split("_")[1])
+        print(str(test_label) + " <------------------------- Real Label ------------------------> " + str(test_label))
         test_image_matrix = image_matrix[test_file_name]
         diff_counters = []
         for train_file_name in train_file_names:
@@ -49,5 +57,17 @@ for i in range(K_FOLD):
         train_labels = [int(filename.split('_')[1]) for filename in train_file_names]
         nearest_neighbours_labels = train_labels[:k]
         print("Nearest Neighbour Classes: " + str(nearest_neighbours_labels))
-        final_class = max(set(nearest_neighbours_labels), key=nearest_neighbours_labels.count)
-        print("CLASSIFIED AS " + str(final_class))
+        diagnosed_class = max(set(nearest_neighbours_labels), key=nearest_neighbours_labels.count)
+        print("CLASSIFIED AS " + str(diagnosed_class))
+        if test_label != diagnosed_class:
+            print("ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!ERROR!!!")
+            error_count += 1
+    precision = (test_number - error_count) / test_number * 100
+    print("Number of Errors: " + str(error_count))
+    print("Precision: " + str(precision))
+    precisions.append(precision)
+
+final_precision = sum(precisions) / float(len(precisions))
+print("------------------------------------------------------------------------------------------------------")
+print("Final Precision: " + str(final_precision))
+print("------------------------------------------------------------------------------------------------------")
