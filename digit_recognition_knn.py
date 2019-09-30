@@ -29,7 +29,8 @@ for i in range(K_FOLD):
     train_file_names = [item for item in file_names if item not in test_file_names]
 
     for test_file_name in test_file_names:
-        print("-------------------------------------------------------------------" + test_file_name)
+        test_label = test_file_name.split("_")[1]
+        print(test_label + " <------------------------- Real Label ------------------------> " + test_label)
         test_image_matrix = image_matrix[test_file_name]
         diff_counters = []
         for train_file_name in train_file_names:
@@ -46,4 +47,7 @@ for i in range(K_FOLD):
             = (list(t) for t in zip(*sorted(zip(diff_counters, train_file_names))))
 
         train_labels = [int(filename.split('_')[1]) for filename in train_file_names]
-        print(train_labels[:k])
+        nearest_neighbours_labels = train_labels[:k]
+        print("Nearest Neighbour Classes: " + str(nearest_neighbours_labels))
+        final_class = max(set(nearest_neighbours_labels), key=nearest_neighbours_labels.count)
+        print("CLASSIFIED AS " + str(final_class))
